@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,8 +15,11 @@ namespace Chapter2
 
         private TestBed _tB;
         private SampleAvgAgent _sA;
+        private Graph _graph;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        private List<float> _sampleAvgRewards;
 
         public App()
         {
@@ -27,6 +31,13 @@ namespace Chapter2
         {
             _tB = new TestBed(STARTING_REWARD);
             _sA = new SampleAvgAgent(_tB);
+            _graph = new Graph(graphics.GraphicsDevice, new Point(800, 600))
+            {
+                Position = new Vector2(0, 300),
+                MaxValue = 5
+            };
+
+            _sampleAvgRewards = new List<float>();
             base.Initialize();
         }
 //
@@ -42,7 +53,7 @@ namespace Chapter2
             if (_currentSteps < MAX_STEPS)
             {
                 _totalReward += _sA.SampleBandit();
-                Console.WriteLine(_currentSteps + "," + _totalReward/_currentSteps);
+                _sampleAvgRewards.Add((float)(_totalReward/_currentSteps));
                 _currentSteps++;
             }
             else
@@ -52,14 +63,12 @@ namespace Chapter2
 
             base.Update(gameTime);
         }
-//
-//        protected override void Draw(GameTime gameTime)
-//        {
-//            GraphicsDevice.Clear(Color.CornflowerBlue);
-//
-//            // TODO: Add your drawing code here
-//
-//            base.Draw(gameTime);
-//        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.WhiteSmoke);
+            _graph.Draw(_sampleAvgRewards, Color.Red);
+            base.Draw(gameTime);
+        }
     }
 }
