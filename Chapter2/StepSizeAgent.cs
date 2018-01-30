@@ -25,7 +25,7 @@ namespace Chapter2
             _random = new Random(NUMBER_OF_BANDITS);
         }
 
-        public void SampleBandit()
+        public double SampleBandit()
         {
             double sampledValue;
             int banditIndex = 0;
@@ -46,6 +46,7 @@ namespace Chapter2
             _averages[banditIndex] = _averages[banditIndex] +
                                      STEP_SIZE * (sampledValue - _averages[banditIndex]);
             TotalReward += sampledValue;
+            return sampledValue;
         }
 
         private bool IsEpsilonCase()

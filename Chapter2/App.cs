@@ -55,12 +55,11 @@ namespace Chapter2
         {
             if (_currentSteps < MAX_STEPS)
             {
-                _sampleAgent.SampleBandit();
-                _sampleAvgRewards.Add((float)(_sampleAgent.TotalReward/_currentSteps));
-                _stepAgent.SampleBandit();
-                _stepSizeRewards.Add((float)(_stepAgent.TotalReward/_currentSteps));
+                _sampleAvgRewards.Add((float)(_sampleAgent.SampleBandit()));
+                _stepSizeRewards.Add((float)(_stepAgent.SampleBandit()));
+                if(_currentSteps % 500 == 0)
+                    Console.WriteLine((float)(_sampleAgent.SampleBandit()) + ", " + (float)(_stepAgent.SampleBandit()));
                 _currentSteps++;
-                Console.WriteLine((float)(_sampleAgent.TotalReward/_currentSteps) + ", " + (float)(_stepAgent.TotalReward/_currentSteps));
             }
             else
             {
