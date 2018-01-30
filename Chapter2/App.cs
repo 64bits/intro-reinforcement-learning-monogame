@@ -30,6 +30,8 @@ namespace Chapter2
 
         protected override void Initialize()
         {
+            var x = new Plot();
+            x.Export();
             _tB = new TestBed(STARTING_REWARD);
             _sampleAgent = new SampleAvgAgent(_tB);
             _stepAgent = new StepSizeAgent(_tB);
