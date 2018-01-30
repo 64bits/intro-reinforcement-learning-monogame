@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace Chapter2
 {
@@ -18,10 +22,31 @@ namespace Chapter2
             _plotModel.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
             _plotModel.LegendBorder = OxyColors.Black;
 
-            var dateAxis = new DateTimeAxis { Position = AxisPosition.Bottom, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 80 };
-            _plotModel.Axes.Add(dateAxis);
-            var valueAxis = new LinearAxis { Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "Value" };
+            var stepAxis = new LinearAxis { Position = AxisPosition.Bottom, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "Num. Steps" };
+            _plotModel.Axes.Add(stepAxis);
+            var valueAxis = new LinearAxis { Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "Avg Reward" };
             _plotModel.Axes.Add(valueAxis);
+        }
+
+        public void AddSeries(List<float> data, string title, double hue)
+        {
+            var lineSeries = new LineSeries
+            {
+                StrokeThickness = 2,
+                MarkerSize = 3,
+                MarkerStroke = OxyColor.FromHsv(hue, 60, 44),
+                CanTrackerInterpolatePoints = true,
+                Title = title,
+                Smooth = false
+            };
+
+            int i = 1;
+            data.ForEach(dataPoint =>
+            {
+                lineSeries.Points.Add(new DataPoint(i, dataPoint));
+                i++;
+            });
+            _plotModel.Series.Add(lineSeries);
         }
 
         public void Export()

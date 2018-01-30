@@ -30,8 +30,6 @@ namespace Chapter2
 
         protected override void Initialize()
         {
-            var x = new Plot();
-            x.Export();
             _tB = new TestBed(STARTING_REWARD);
             _sampleAgent = new SampleAvgAgent(_tB);
             _stepAgent = new StepSizeAgent(_tB);
@@ -45,26 +43,23 @@ namespace Chapter2
             _stepSizeRewards = new List<float>();
             base.Initialize();
         }
-//
-//        protected override void LoadContent()
-//        {
-//            spriteBatch = new SpriteBatch(GraphicsDevice);
-//
-//            // TODO: use this.Content to load your game content here
-//        }
-//
+
         protected override void Update(GameTime gameTime)
         {
             if (_currentSteps < MAX_STEPS)
             {
-                _sampleAvgRewards.Add((float)(_sampleAgent.SampleBandit()));
-                _stepSizeRewards.Add((float)(_stepAgent.SampleBandit()));
-                if(_currentSteps % 500 == 0)
-                    Console.WriteLine((float)(_sampleAgent.SampleBandit()) + ", " + (float)(_stepAgent.SampleBandit()));
+                _sampleAgent.SampleBandit();
+                _stepAgent.SampleBandit();
                 _currentSteps++;
+                _sampleAvgRewards.Add((float)(_sampleAgent.TotalReward/_currentSteps));
+                _stepSizeRewards.Add((float)(_stepAgent.TotalReward/_currentSteps));
             }
             else
             {
+                Plot plot = new Plot();
+                plot.AddSeries(_sampleAvgRewards, "Sample Average", 211);
+                plot.AddSeries(_stepSizeRewards, "Step Size", 360);
+                plot.Export();
                 Exit();
             }
 
