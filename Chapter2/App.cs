@@ -26,6 +26,9 @@ namespace Chapter2
         {
             graphics = new GraphicsDeviceManager(this);
             IsMouseVisible = true;
+            // Break out of the FPS
+            graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
         }
 
         protected override void Initialize()
@@ -51,6 +54,7 @@ namespace Chapter2
                 _sampleAgent.SampleBandit();
                 _stepAgent.SampleBandit();
                 _currentSteps++;
+                _tB.Step();
                 _sampleAvgRewards.Add((float)(_sampleAgent.TotalReward/_currentSteps));
                 _stepSizeRewards.Add((float)(_stepAgent.TotalReward/_currentSteps));
             }
